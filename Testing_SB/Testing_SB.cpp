@@ -111,6 +111,7 @@ TEST_F(MouseShipFixture, isDragged)
 	EXPECT_EQ(width, ship.width);
 }
 
+
 int main()
 {
 	setlocale(LC_ALL, "rus");

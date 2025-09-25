@@ -200,7 +200,7 @@ public:
     {
         if (color == sf::Color(0, 170, 255))
         {
-            last = { rect.getPosition().x, rect.getPosition().y };
+            last = { x, y };
         }
     }
 
@@ -476,8 +476,6 @@ inline bool checkCollision(Ship* currentShip, const std::vector<Ship*>& otherShi
 //(Cat-Communist)
 inline bool RandomPlacing(BattleCell field[10][10], Ship* ship, std::vector<Ship*> otherShips)
 {
-    srand(time(NULL));
-
     std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<> pos_dist(0, 9);
     std::uniform_int_distribution<> rot_dist(0, 1);
@@ -501,7 +499,6 @@ inline bool RandomPlacing(BattleCell field[10][10], Ship* ship, std::vector<Ship
     return false;
 }
 
-//Cat-Communist)
 inline void RandomShot(Mouse& mouse, BattleCell field[10][10])
 {
     std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());

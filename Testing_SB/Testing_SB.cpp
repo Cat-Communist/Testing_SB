@@ -16,27 +16,26 @@ void ShipFixture::SetUp()
 	ship.width = 50.0f;
 }
 
-class BattleCellFixture : public testing::Test {
-public: 
+class MouseShipFixture : public ShipFixture
+{
+public:
 	void SetUp() override;
 protected:
-	BattleCell btn;
+	Mouse mouse;
+	Mouse& ref_mouse = mouse;
 };
 
-void BattleCellFixture::SetUp() {
-	btn.setBackColor(sf::Color(123, 124, 125));
-	btn.setPosition({ 127.f, 140.f });
-}
-
-TEST_F(BattleCellFixture, setBack)
+void MouseShipFixture::SetUp()
 {
-	EXPECT_EQ(sf::Color(123, 124, 125), btn.getBackColor());
-}
+	mouse.rightRelease = true;
+	mouse.x = 10.0f; mouse.y = 10.0f;
 
-TEST(suiteName, setBackColor) {
-	BattleCell button;
-	button.setBackColor(sf::Color(127, 127, 127));
-	EXPECT_EQ(sf::Color(127, 127, 127), button.getBackColor());
+	ship.isDragged = false;
+	ship.wasClicked = true;
+	ship.x = 5.0f;
+	ship.y = 5.0f;
+	ship.width = 50.0f;
+	ship.height = 100.0f;
 }
 
 TEST_F(ShipFixture, inside)
@@ -52,6 +51,64 @@ TEST_F(ShipFixture, outside)
 TEST_F(ShipFixture, blw_zero)
 {
 	EXPECT_FALSE(ship.isInside(-100.0f, -100.0f));
+}
+
+TEST_F(MouseShipFixture, clicked)
+{
+	//Act
+	ship.Rotatable(ref_mouse);
+	EXPECT_FALSE(ship.wasClicked);
+}
+
+TEST_F(MouseShipFixture, notclicked)
+{
+	//Arrange
+	ship.wasClicked = false;
+	float width = ship.width;
+
+	//Act
+	ship.Rotatable(ref_mouse);
+
+	//Expect
+	EXPECT_NE(width, ship.width);
+}
+
+TEST_F(MouseShipFixture, miss)
+{
+	//Arrange
+	ship.wasClicked = false;
+	float width = ship.width;
+	mouse.x = 300.0f; mouse.y = 300.0f;
+
+	//Act
+	ship.Rotatable(ref_mouse);
+
+	//Expect
+	EXPECT_EQ(width, ship.width);
+}
+
+TEST_F(MouseShipFixture, notreleased)
+{
+	//Arrange
+	ship.wasClicked = false;
+	float width = ship.width;
+	mouse.rightRelease = false;
+
+	//Act
+	ship.Rotatable(ref_mouse);
+
+	//Expect
+	EXPECT_EQ(width, ship.width);
+}
+
+TEST_F(MouseShipFixture, isDragged)
+{
+	//Arrange
+	ship.isDragged = true;
+	float width = ship.width;
+
+	//Expect
+	EXPECT_EQ(width, ship.width);
 }
 
 int main()

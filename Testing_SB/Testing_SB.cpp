@@ -123,6 +123,12 @@ TEST_F(ButtonFixture, getPosition)
 	EXPECT_FLOAT_EQ(150.f, pos.y);
 }
 
+TEST_F(ButtonFixture, setOrigin)
+{
+	button.setOrigin({ 50.f, 25.f });
+	SUCCEED();
+}
+
 TEST(RandomShotTest, AvailableCells)
 {
 

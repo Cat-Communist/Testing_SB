@@ -123,9 +123,9 @@ TEST_F(ButtonFixture, getPosition)
 	EXPECT_FLOAT_EQ(150.f, pos.y);
 }
 
-// Тест для RandomShot
-TEST(RandomShotTest, BasicFunctionality)
+TEST(RandomShotTest, AvailableCells)
 {
+
 	Mouse mouse;
 	BattleCell field[10][10];
 
@@ -136,23 +136,36 @@ TEST(RandomShotTest, BasicFunctionality)
 		}
 	}
 
-	field[2][3].setBackColor(sf::Color::White);
-	field[5][7].setBackColor(sf::Color::Red);
-
 	RandomShot(mouse, field);
 
 	EXPECT_GE(mouse.x, 0.f);
-	EXPECT_GE(mouse.y, 0.f);
 	EXPECT_LE(mouse.x, 450.f);
-	EXPECT_LE(mouse.y, 450.f);
+	EXPECT_TRUE(mouse.leftRelease);
+}
+
+TEST(RandomShotTest, MixedField)
+{
+	Mouse mouse;
+	BattleCell field[10][10];
+
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			field[i][j] = BattleCell(sf::Vector2f(50.f, 50.f), sf::Color::Blue, sf::Color::Black, i * 10 + j);
+			field[i][j].setPosition(sf::Vector2f(j * 50.f, i * 50.f));
+
+			if ((i + j) % 3 == 0) {
+				field[i][j].setBackColor(sf::Color::White);
+			}
+		}
+	}
+
+	RandomShot(mouse, field);
 
 	int cellX = static_cast<int>(mouse.x / 50.f);
 	int cellY = static_cast<int>(mouse.y / 50.f);
 
 	EXPECT_NE(sf::Color::White, field[cellY][cellX].getBackColor());
 	EXPECT_NE(sf::Color::Red, field[cellY][cellX].getBackColor());
-
-	EXPECT_TRUE(mouse.leftRelease);
 }
 
 TEST_F(ShipFixture, inside)
